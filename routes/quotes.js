@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-/* GET users listing. */
+
 router.get('/', function (req, res, next) {
   let quotes = [
     {
@@ -19,6 +19,10 @@ router.get('/', function (req, res, next) {
     {
       quote: '"You must want to be a butterfly so badly, you are willing to give up being a caterpillar."',
       name: 'Sekou Andrews'
+    },
+    {
+      quote: '"Learn the rules like a pro, so you can break them like an artist."',
+      name: 'Pablo Picasso'
     }
   ];
 
