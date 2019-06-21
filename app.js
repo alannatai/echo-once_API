@@ -10,7 +10,7 @@ var quotesRouter = require('./routes/quotes');
 
 var app = express();
 
-app.use(cors({origin: 'http://localhost:3001'}));
+app.use(cors({origin: 'http://localhost:3000'}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
