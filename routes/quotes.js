@@ -1,7 +1,8 @@
 const express = require('express');
 const quotesRouter = express.Router();
 const axios = require('axios');
-const mongo = require('mongodb');
+const mongo = require('mongodb').MongoClient;
+const objectId = require('mongodb').ObjectID;
 const assert = require('assert');
 
 const url = 'mongodb://localhost:27017/test';
@@ -39,23 +40,25 @@ mongo.connect(url, function (err, client) {
 
 quotesRouter.get('/', function (req, res, next) {
   const quotesArray = [];
-    const cursor = db.collection('quotes').find();
-    cursor.forEach(function(quote, err) {
-      assert.equal(null, err);
-      quotesArray.push(quote);
-    }, function() {
-      res.send({
-        quotes: quotesArray
-      });
+  const cursor = db.collection('quotes').find();
+  cursor.forEach(function (quote, err) {
+    assert.equal(null, err);
+    quotesArray.push(quote);
+  }, function () {
+    res.send({
+      quotes: quotesArray
     });
-  
+  });
+
 });
 
+//Submit Request
 quotesRouter.post('/', function (req, res, next) {
   const item = {
     quote: req.body.quote,
     author: req.body.author
   };
+
   if (db) {
     db.collection('quotes').insertOne(item, function (err, result) {
       assert.equal(null, err);
@@ -68,11 +71,27 @@ quotesRouter.post('/', function (req, res, next) {
   res.redirect('/')
 });
 
-quotesRouter.post('/update', function (req, res, next) {
+//Update Request
+quotesRouter.post('/', function (req, res, next) {
+  const item = {
+    quote: req.body.quote,
+    author: req.body.author
+  };
 
+  const id = req.body.id
+
+  if (db) {
+    db.collection('quotes').updateOne({"_id": objectId(id)}, {$set: item}, function (err, result) {
+      assert.equal(null, err);
+      console.log('Item Updated');
+    });
+  } else {
+    console.log('db connection not ready yet')
+  }
 });
 
-quotesRouter.post('/delete', function (req, res, next) {
+//Delete Request
+quotesRouter.post('/', function (req, res, next) {
 
 });
 
