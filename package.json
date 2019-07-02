@@ -11,9 +11,13 @@
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-promise-router": "^3.0.3",
     "http-errors": "^1.6.3",
     "mongodb": "^3.2.7",
     "morgan": "~1.9.1",
+    "passport": "^0.4.0",
+    "passport-facebook-token": "^3.3.0",
+    "passport-google-plus-token": "^2.1.0",
     "pug": "2.0.0-beta11"
   }
 }
