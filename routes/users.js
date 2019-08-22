@@ -12,11 +12,11 @@ usersRouter.route('/signup')
         UsersController.signUp
     );
 
-usersRouter.route('/signin')
+usersRouter.route('/login')
     .post(
         validateBody(schema), 
         passport.authenticate('local', { session: false }), 
-        UsersController.signIn
+        UsersController.logIn
     );
 
 usersRouter.route('/secret')

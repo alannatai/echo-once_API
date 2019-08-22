@@ -13,7 +13,7 @@ signToken = user => {
 
 module.exports = {
     signUp: async (req, res, next) => {
-        const { username, email, password } = req.value.body;
+        const { email, password } = req.value.body;
 
         //Check if user exists with same email 
         const foundUser = await User.findOne({ "local.email": email });
@@ -25,7 +25,6 @@ module.exports = {
         const newUser = new User({
             method: 'local',
             local: {
-                username: username,
                 email: email,
                 password: password
             }
@@ -39,7 +38,7 @@ module.exports = {
         res.status(200).json({ token });
     },
 
-    signIn: async (req, res, next) => {
+    logIn: async (req, res, next) => {
         //generate token
         const token = signToken(req.user);
         res.status(200).json({ token });
@@ -53,7 +52,6 @@ module.exports = {
     },
 
     secret: async (req, res, next) => {
-        console.log('I got here!')
         res.json({ secret: "resource" })
     }
 }

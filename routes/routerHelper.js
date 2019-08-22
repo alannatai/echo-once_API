@@ -1,9 +1,8 @@
 const Joi = require('@hapi/joi');
 
 const schema = Joi.object().keys({
-    username: Joi.string().alphanum().min(3).max(30).required(),
-    password: Joi.string().alphanum().min(8).max(30).required(),
-    email: Joi.string().email({ minDomainSegments: 2 }).required()
+    password: Joi.string().alphanum().min(8).max(30).required('joi Password is required'),
+    email: Joi.string().email({ minDomainSegments: 2 }).required('joi Email is required')
 });
 
 const validateBody = (schema) => {

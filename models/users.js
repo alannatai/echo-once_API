@@ -10,7 +10,6 @@ const userSchema = new Schema({
         required: true
     },
     local: {
-        username: String,
         email: {
             type: String,
             lowercase: true
