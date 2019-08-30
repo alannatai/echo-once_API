@@ -6,6 +6,12 @@ const passportConf = require('./passport')
 const { validateBody, schema } = require('./routerHelper');
 const UsersController = require('./usersControllers');
 
+const passportJWT = passport.authenticate('jwt', { session: false });
+
+usersRouter.use(passport.initialize());
+usersRouter.use(passport.session());
+
+
 usersRouter.route('/signup')
     .post(
         validateBody(schema),
@@ -14,19 +20,10 @@ usersRouter.route('/signup')
 
 usersRouter.route('/login')
     .post(
-        validateBody(schema), 
-        passport.authenticate('local', { session: false }), 
+        validateBody(schema),
+        passport.authenticate('local', { session: false }),
         UsersController.logIn
     );
-
-usersRouter.route('/secret')
-    .get(
-        passport.authenticate('jwt', { session: false }), 
-        UsersController.secret
-   );
-
-usersRouter.use(passportConf.initialize());
-usersRouter.use(passportConf.session());
 
 usersRouter.route('/oauth/facebook')
     .post(
@@ -36,16 +33,28 @@ usersRouter.route('/oauth/facebook')
 
 usersRouter.route('/oauth/google')
     .post(
-        passportConf.authenticate('googleToken', { session: false}),
+        passport.authenticate('googleToken', { session: false }),
         UsersController.generateOAuthToken
     );
 
-/*usersRouter.use('/oauth/google', (req, res) => {
-    passportConf.authenticate(
-        'googleToken', function (error, user, info) {
-            if (!user) res.send(401);
-            return res.send(user);
-        })(req, res);
-})*/
+usersRouter.route('/oauth/link/facebook')
+    .post(
+        passportJWT,
+        passport.authorize('facebookToken', { session: false }),
+        UsersController.linkFacebook
+    );
+
+usersRouter.route('/oauth/link/google')
+    .post(
+        passportJWT,
+        passport.authorize('googleToken', { session: false }),
+        UsersController.linkGoogle
+    );
+
+usersRouter.route('/secret')
+    .get(
+        passportJWT,
+        UsersController.secret
+    );
 
 module.exports = usersRouter;

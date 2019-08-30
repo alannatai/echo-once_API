@@ -14,7 +14,7 @@ var app = express();
 
 app.use(cors({origin: 'http://localhost:3000'}));
 
-mongoose.connect('mongodb://localhost:27017/echoOnceDb');
+mongoose.connect('mongodb://localhost:27017/echoOnceDb', { useNewUrlParser: true });
 
 // view engine setup
 

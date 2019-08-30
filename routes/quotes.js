@@ -8,7 +8,7 @@ const url = 'mongodb://localhost:27017/test';
 
 let db;
 
-mongo.connect(url, function (err, client) {
+mongo.connect(url, { useNewUrlParser: true }, function (err, client) {
   assert.equal(null, err);
   db = client.db('echoOnceDb');
 });

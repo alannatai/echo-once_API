@@ -4,9 +4,8 @@ const bcrypt = require('bcryptjs');
 
 //Create schema
 const userSchema = new Schema({
-    method: {
-        type: String,
-        enum: ['local', 'google', 'facebook'],
+    methods: {
+        type: [String],
         required: true
     },
     local: {
@@ -41,10 +40,15 @@ const userSchema = new Schema({
 
 userSchema.pre('save', async function (next) {
     try {
-        if (this.method !== 'local') {
+        if (!this.methods.includes('local')) {
             next();
         }
-
+        //user schema initiate
+        const user = this;
+        //check if user was modified to know if password has been hashed
+        if (!user.isModified('local.password')) {
+            next();
+          }
         //generate a salt
         const salt = await bcrypt.genSalt(10);
         //generate password hash (salt+hash)
