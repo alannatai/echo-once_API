@@ -36,10 +36,7 @@ module.exports = {
             const token = signToken(foundUser);
 
             //Respond with token
-            return res.status(200).json({
-                token,
-                methods: foundUser.methods
-            });
+            return res.status(200).json({ token });
         };
 
         foundUser = await User.findOne({ "facebook.email": email })
@@ -56,10 +53,7 @@ module.exports = {
             const token = signToken(foundUser);
 
             //Respond with token
-            return res.status(200).json({
-                token,
-                methods: foundUser.methods
-            });
+            return res.status(200).json({ token });
         };
 
         //Create new user
@@ -76,40 +70,87 @@ module.exports = {
         const token = signToken(newUser);
 
         //Respond with token
-        res.status(200).json({
-            token,
-            methods: newUser.methods
-        });
+        res.status(200).json({ token });
     },
 
     logIn: async (req, res, next) => {
         //generate token
         const token = signToken(req.user);
-        res.status(200).json({
-            token,
-            methods: req.user.methods
-        });
+        res.status(200).json({ token });
     },
 
     generateOAuthToken: async (req, res, next) => {
         //generate token
-        console.log('USERS CONTROLLER req.user', req.user);
         const token = signToken(req.user);
-        res.status(200).json({
-            token,
-            methods: req.user.methods
-        });
+        res.status(200).json({ token });
     },
 
     linkFacebook: async (req, res, next) => {
-        res.json({ success: true, message: 'Successfully linked account with Facebook' })
+        res.json({
+            success: true,
+            methods: req.user.methods,
+            message: 'Successfully linked account with Facebook'
+        })
     },
 
     linkGoogle: async (req, res, next) => {
-        res.json({ sucess: true, message: 'Successfully linked account with Google' })
+        res.json({
+            success: true,
+            methods: req.user.methods,
+            message: 'Successfully linked account with Google'
+        })
     },
 
-    secret: async (req, res, next) => {
-        res.json({ secret: "resource" })
+    unlinkFacebook: async (req, res, next) => {
+         if (req.user.facebook) {
+            req.user.facebook = undefined
+        }
+        
+        const facebook = req.user.methods.indexOf('facebook');
+        if (facebook >= 0) {
+            req.user.methods.splice(facebook, 1)
+        }
+       
+        await req.user.save();
+
+        res.json({
+            success: true,
+            methods: req.user.methods,
+            message: 'Successfully unlinked Facebook account'
+        })
+    },
+
+    unlinkGoogle: async (req, res, next) => {
+        //delete google sub-object
+        if (req.user.google) {
+            req.user.google = undefined
+        }
+        //remove google from methods array
+        const google = req.user.methods.indexOf('google');
+        if (google >= 0) {
+            req.user.methods.splice(google, 1)
+        }
+        //save changes
+        await req.user.save();
+
+        res.json({
+            success: true,
+            methods: req.user.methods,
+            message: 'Successfully unlinked Google account'
+        })
+    },
+
+    //later specify for different components eg. accountSecret, submitSecret etc.
+    submitSecret: async (req, res, next) => {
+        res.json({
+            submitSecret: "submit resource"
+        })
+    },
+
+    accountSecret: async (req, res, next) => {
+        res.json({
+            accountSecret: "account resource",
+            methods: req.user.methods
+        })
     }
 }

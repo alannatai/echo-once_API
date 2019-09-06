@@ -51,10 +51,28 @@ usersRouter.route('/oauth/link/google')
         UsersController.linkGoogle
     );
 
-usersRouter.route('/secret')
+usersRouter.route('/oauth/unlink/google')
+    .post(
+        passportJWT,
+        UsersController.unlinkGoogle
+    );
+
+usersRouter.route('/oauth/unlink/facebook')
+    .post(
+        passportJWT,
+        UsersController.unlinkFacebook
+    );
+
+usersRouter.route('/submit')
     .get(
         passportJWT,
-        UsersController.secret
+        UsersController.submitSecret
+    );
+
+usersRouter.route('/account')
+    .get(
+        passportJWT,
+        UsersController.accountSecret
     );
 
 module.exports = usersRouter;
