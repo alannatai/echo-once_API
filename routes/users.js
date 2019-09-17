@@ -25,6 +25,9 @@ usersRouter.route('/login')
         UsersController.logIn
     );
 
+usersRouter.route('/logout')
+    .get(passportJWT, UsersController.logOut)
+
 usersRouter.route('/oauth/facebook')
     .post(
         passport.authenticate('facebookToken', { session: false }),
@@ -74,5 +77,8 @@ usersRouter.route('/account')
         passportJWT,
         UsersController.accountSecret
     );
+
+usersRouter.route('/status')
+    .get(passportJWT, UsersController.checkAuth);
 
 module.exports = usersRouter;

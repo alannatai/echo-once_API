@@ -1,18 +1,21 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var cors = require('cors');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cors = require('cors');
 const mongoose = require('mongoose');
 
-var indexRouter = require('./routes/index');
-var quotesRouter = require('./routes/quotes');
-var usersRouter = require('./routes/users')
+const indexRouter = require('./routes/index');
+const quotesRouter = require('./routes/quotes');
+const usersRouter = require('./routes/users')
 
-var app = express();
-
-app.use(cors({origin: 'http://localhost:3000'}));
+const app = express();
+app.use(cookieParser());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 
 mongoose.connect('mongodb://localhost:27017/echoOnceDb', { useNewUrlParser: true });
 
